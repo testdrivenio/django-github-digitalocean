@@ -5,3 +5,4 @@ db.sqlite3
 staticfiles
 mediafiles
 .env
+.idea
