@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.7.4-alpine
+FROM python:3.8.2-alpine
 
 # set work directory
 WORKDIR /usr/src/app
@@ -17,9 +17,8 @@ RUN apk update \
 
 # install dependencies
 RUN pip install --upgrade pip
-RUN pip install pipenv
-COPY ./Pipfile /usr/src/app/Pipfile
-RUN pipenv install --skip-lock --system --dev
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN pip install -r /usr/src/app/requirements.txt
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
