@@ -63,10 +63,8 @@ jobs:
           echo SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} >> .env
           echo SQL_HOST=${{ secrets.SQL_HOST }} >> .env
           echo SQL_PORT=${{ secrets.SQL_PORT }} >> .env
-      - name: Set environment variables
-        run: |
-          echo ::set-env name=WEB_IMAGE::${{ env.WEB_IMAGE }}
-          echo ::set-env name=NGINX_IMAGE::${{ env.NGINX_IMAGE }}
+          echo WEB_IMAGE=${{ env.WEB_IMAGE }} >> .env
+          echo NGINX_IMAGE=${{ env.NGINX_IMAGE }} >> .env
       - name: Add the private SSH key to the ssh-agent
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -83,8 +81,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             echo "Changing to the /app directory and setting environment variables..."
             cd /app
-            echo $WEB_IMAGE
-            echo $NGINX_IMAGE
+            cat .env
             echo "Logging in to the GitHub Pages Docker registry..."
             docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
             echo "Pulling images..."
