@@ -79,6 +79,7 @@ jobs:
           scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             cd /app
+            export GITHUB_REPOSITORY=${{ env.GITHUB_REPOSITORY }}
             export WEB_IMAGE=${{ env.WEB_IMAGE }}
             export NGINX_IMAGE=${{ env.NGINX_IMAGE }}
             docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
