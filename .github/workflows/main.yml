@@ -79,15 +79,10 @@ jobs:
         run: |
           scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
-            echo "Changing to the /app directory and setting environment variables..."
             cd /app
             source .env
-            cat env
-            echo "Logging in to the GitHub Pages Docker registry..."
             docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
-            echo "Pulling images..."
             docker pull $WEB_IMAGE
             docker pull $NGINX_IMAGE
-            echo "Building new images and spinning up the containers..."
             docker-compose -f docker-compose.prod.yml up -d
           ENDSSH
