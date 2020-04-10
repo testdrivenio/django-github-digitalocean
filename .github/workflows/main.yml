@@ -79,7 +79,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             echo "Changing to the /app directory and setting environment variables..."
             cd /app
-            export GITHUB_REPOSITORY=${{ env.GITHUB_REPOSITORY }}
+            export GITHUB_REPOSITORY=$GITHUB_REPOSITORY
             export WEB_IMAGE=${{ env.WEB_IMAGE }}
             export NGINX_IMAGE=${{ env.NGINX_IMAGE }}
             echo $GITHUB_REPOSITORY
