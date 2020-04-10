@@ -74,17 +74,22 @@ jobs:
       - name: Build and deploy images on DigitalOcean
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-          WEB_IMAGE: ${{ env.WEB_IMAGE }}
         run: |
           scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
+            echo "Changing to the /app directory and setting environment variables..."
             cd /app
             export GITHUB_REPOSITORY=${{ env.GITHUB_REPOSITORY }}
             export WEB_IMAGE=${{ env.WEB_IMAGE }}
             export NGINX_IMAGE=${{ env.NGINX_IMAGE }}
+            echo $GITHUB_REPOSITORY
+            echo $WEB_IMAGE
+            echo $NGINX_IMAGE
+            echo "Logging in to the GitHub Pages Docker registry..."
             docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
+            echo "Pulling images..."
             docker pull $WEB_IMAGE
             docker pull $NGINX_IMAGE
+            echo "Building new images and spinning up the containers..."
             docker-compose -f docker-compose.prod.yml up -d
-            docker-compose -f docker-compose.prod.yml exec -T web env
           ENDSSH
