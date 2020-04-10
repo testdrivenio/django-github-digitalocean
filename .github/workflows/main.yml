@@ -81,7 +81,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             echo "Changing to the /app directory and setting environment variables..."
             cd /app
-            cat .env
+            source .env
+            cat env
             echo "Logging in to the GitHub Pages Docker registry..."
             docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
             echo "Pulling images..."
