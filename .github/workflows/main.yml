@@ -3,8 +3,8 @@ name: Continuous Integration and Delivery
 on: [push]
 
 env:
-  WEB_IMAGE: docker.pkg.github.com/$GITHUB_REPOSITORY/web
-  NGINX_IMAGE: docker.pkg.github.com/$GITHUB_REPOSITORY/nginx
+  WEB_IMAGE: docker.pkg.github.com/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web
+  NGINX_IMAGE: docker.pkg.github.com/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx
 
 jobs:
 
