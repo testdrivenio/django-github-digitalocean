@@ -27,3 +27,4 @@ Verify [http://localhost:8000/](http://localhost:8000/) works as expected:
 ### CI and Production
 
 See the blog [post](https://testdriven.io/blog/deploying-django-to-digitalocean-with-docker-and-github-actions/).
+push test
