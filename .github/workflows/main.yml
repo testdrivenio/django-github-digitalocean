@@ -27,8 +27,8 @@ jobs:
           echo SQL_PORT=${{ secrets.SQL_PORT }} >> .env
       - name: Set environment variables
         run: |
-          echo ::set-env name=WEB_IMAGE::${{ env.WEB_IMAGE }}
-          echo ::set-env name=NGINX_IMAGE::${{ env.NGINX_IMAGE }}
+          echo name=WEB_IMAGE::${{ env.WEB_IMAGE }}
+          echo name=NGINX_IMAGE::${{ env.NGINX_IMAGE }}
       - name: Log in to GitHub Packages
         run: echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         env:
