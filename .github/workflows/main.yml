@@ -1,0 +1,46 @@
+name: Continuous Integration and Delivery
+
+on: [push]
+
+env:
+  WEB_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web
+  NGINX_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx
+
+jobs:
+
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v1
+      - name: Add environment variables to .env
+        run: |
+          echo DEBUG=0 >> .env
+          echo SQL_ENGINE=django.db.backends.postgresql >> .env
+          echo DATABASE=postgres >> .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+          echo SQL_DATABASE=${{ secrets.SQL_DATABASE }} >> .env
+          echo SQL_USER=${{ secrets.SQL_USER }} >> .env
+          echo SQL_PASSWORD=${{ secrets.SQL_PASSWORD }} >> .env
+          echo SQL_HOST=${{ secrets.SQL_HOST }} >> .env
+          echo SQL_PORT=${{ secrets.SQL_PORT }} >> .env
+      - name: Set environment variables
+        run: |
+          echo "WEB_IMAGE=$(echo ${{env.WEB_IMAGE}} )" >> $GITHUB_ENV
+          echo "NGINX_IMAGE=$(echo ${{env.NGINX_IMAGE}} )" >> $GITHUB_ENV
+      - name: Log in to GitHub Packages
+        run: echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${{ secrets.NAMESPACE }} --password-stdin
+        env:
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Pull images
+        run: |
+          docker pull ${{ env.WEB_IMAGE }} || true
+          docker pull ${{ env.NGINX_IMAGE }} || true
+      - name: Build images
+        run: |
+          docker-compose -f docker-compose.ci.yml build
+      - name: Push images
+        run: |
+          docker push ${{ env.WEB_IMAGE }}
+          docker push ${{ env.NGINX_IMAGE }}
