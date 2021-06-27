@@ -65,6 +65,7 @@ jobs:
           echo SQL_PORT=${{ secrets.SQL_PORT }} >> .env
           echo WEB_IMAGE=${{ env.WEB_IMAGE }} >> .env
           echo NGINX_IMAGE=${{ env.NGINX_IMAGE }} >> .env
+          echo NAMESPACE=${{ secrets.NAMESPACE }} >> .env
       - name: Add the private SSH key to the ssh-agent
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -82,7 +83,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             cd /app
             source .env
-            echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${{ secrets.NAMESPACE }} --password-stdin
+            echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${secrets.NAMESPACE} --password-stdin
             docker pull $WEB_IMAGE
             docker pull $NGINX_IMAGE
             docker-compose -f docker-compose.prod.yml up -d
