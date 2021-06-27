@@ -83,7 +83,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             cd /app
             source .env
-            echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${secrets.NAMESPACE} --password-stdin
+            echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${NAMESPACE} --password-stdin
             docker pull $WEB_IMAGE
             docker pull $NGINX_IMAGE
             docker-compose -f docker-compose.prod.yml up -d
